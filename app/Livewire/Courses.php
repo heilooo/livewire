@@ -58,7 +58,11 @@ class Courses extends Component
         $this->dispatch('showModal');
     }
 
-
+    public function changeStatus($value, $id)
+    {
+        $course = CourseModel::findOrFail($id);
+        $course->update(['status' => $value]);
+    }
 
     public function render()
     {

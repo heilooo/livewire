@@ -62,6 +62,13 @@
                 <td>{{ $course->name }}</td>
                 <td>{{ $course->price }}</td>
                 <td>
+                    <select class="form-control" wire:change="changeStatus($event.target.value, $event.target.dataset.id)"
+                        data-id="{{ $course->id }}">
+                        <option value="1" {{$course->status ? 'selected' : ''}}>enable</option>
+                        <option value="0" {{$course->status ? '' : 'selected'}}>disable</option>
+                    </select>
+                </td>
+                <td>
                     <button wire:click="delete({{ $course }})" class="btn btn-danger">Delete</button>
                     <button type="button" class="btn btn-primary" wire:click="show({{ $course->id }})">Show</button>
                 </td>

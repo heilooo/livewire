@@ -26,12 +26,23 @@
             const modal = bootstrap.Modal.getInstance(myModal);
             modal.hide();
         });
-    </script>
-    <script>
+
         window.addEventListener("showModal", () => {
             const myShowModal = document.getElementById('showModal');
             const showModal = bootstrap.Modal.getOrCreateInstance(myShowModal);
             showModal.show();
+        });
+
+        window.addEventListener("showEditModal", () => {
+            const myShowEditModal = document.getElementById('exampleModal');
+            const showEditModal = bootstrap.Modal.getOrCreateInstance(myShowEditModal);
+            showEditModal.show();
+        });
+
+        window.addEventListener("showToast", () => {
+            const toastLiveExample = document.getElementById('liveToast')
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            toastBootstrap.show()
         });
     </script>
 </body>

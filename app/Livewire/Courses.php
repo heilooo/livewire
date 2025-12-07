@@ -3,12 +3,16 @@
 namespace App\Livewire;
 
 use App\Models\Course;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use App\Models\Course as CourseModel;
 use Livewire\Attributes\Js;
+use Livewire\WithPagination;
 
 class Courses extends Component
 {
+    use withPagination;
+
     public $search = '';
     public $sortColumn = 'id'; // ستون پیش‌فرض برای سورت
     public $sortDirection = 'desc'; // جهت پیش‌فرض
@@ -34,14 +38,19 @@ class Courses extends Component
         JS;
     }
 
-    public function delete(CourseModel $course)
+    public function delete($id)
     {
-        $course->delete();
+        Course::findOrFail($id)->delete();
     }
 
-
+    #[Validate([
+        'name' => 'required|min:3|max:5',
+        'price' => 'required'
+    ])]
     public $name = '';
     public $price = '';
+
+
     public function save()
     {
         $validated = $this->validate([
@@ -51,17 +60,54 @@ class Courses extends Component
         CourseModel::create($validated);
         $this->dispatch('closeModal');
     }
+
     public $singleCourse = null;
+
     public function show($id)
     {
         $this->singleCourse = CourseModel::findOrFail($id);
         $this->dispatch('showModal');
     }
 
+    public function edit($id)
+    {
+
+        $this->singleCourse = CourseModel::findOrFail($id);
+        $this->dispatch('showEditModal');
+    }
+
+    public function update($id)
+    {
+        $validated = $this->validate([
+            'name' => 'required',
+            'price' => 'required',
+        ]);
+        $course = CourseModel::findOrFail($id);
+        $course->update($validated);
+        $this->dispatch('closeModal');
+    }
+
+    // در کامپوننت
+    public function submitForm()
+    {
+        if (isset($this->singleCourse) && $this->singleCourse) {
+            $this->update($this->singleCourse->id);
+        } else {
+            $this->save();
+        }
+    }
+
+
     public function changeStatus($value, $id)
     {
         $course = CourseModel::findOrFail($id);
         $course->update(['status' => $value]);
+        $this->dispatch('ShowToast');
+    }
+
+    public function resetAll()
+    {
+        $this->reset();
     }
 
     public function render()
